@@ -1,0 +1,29 @@
+services:
+
+  agent:
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - /etc/agent/config.river
+    environment:
+      - AGENT_MODE=flow
+    image: grafana/agent:latest
+    ports:
+      - 12345:12345
+    volumes:
+      - ./agent.river:/etc/agent/config.river:ro
+      - /run/docker.sock:/run/docker.sock:ro
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+
+  mimir:
+    command:
+      - --config.file=/etc/mimir/demo.yaml
+    image: grafana/mimir:latest
+    ports:
+      - 9009:9009
+    volumes:
+      - ./mimir.yaml:/etc/mimir/demo.yaml:ro

@@ -1,0 +1,33 @@
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+//prometheus.exporter.self "agent" {
+//}
+
+//prometheus.remote_write "agent" {
+//  endpoint {
+//    url = "http://mimir:9009/api/v1/push"
+//  }
+//}
+
+discovery.docker "containers" {
+  host = "unix:///run/docker.sock"
+}
+
+prometheus.scrape "demo" {
+  targets    = discovery.docker.containers.targets
+  forward_to = [prometheus.remote_write.demo.receiver]
+}
+
+prometheus.remote_write "demo" {
+  endpoint {
+    url = "http://mimir:9009/api/v1/push"
+
+//    basic_auth {
+//      username = USERNAME
+//      password = PASSWORD
+//    }
+  }
+}
