@@ -3,31 +3,28 @@ logging {
   format = "logfmt"
 }
 
-//prometheus.exporter.self "agent" {
-//}
 
-//prometheus.remote_write "agent" {
-//  endpoint {
-//    url = "http://mimir:9009/api/v1/push"
-//  }
-//}
+prometheus.exporter.self "agent" {
+}
+
+prometheus.scrape "agent" {
+  targets    = prometheus.exporter.self.agent.targets
+  forward_to = [prometheus.remote_write.mimir.receiver]
+}
+
 
 discovery.docker "containers" {
   host = "unix:///run/docker.sock"
 }
 
-prometheus.scrape "demo" {
+prometheus.scrape "containers" {
   targets    = discovery.docker.containers.targets
-  forward_to = [prometheus.remote_write.demo.receiver]
+  forward_to = [prometheus.remote_write.mimir.receiver]
 }
 
-prometheus.remote_write "demo" {
+
+prometheus.remote_write "mimir" {
   endpoint {
     url = "http://mimir:9009/api/v1/push"
-
-//    basic_auth {
-//      username = USERNAME
-//      password = PASSWORD
-//    }
   }
 }
