@@ -1,6 +1,6 @@
 services:
 
-  agent:
+  agent-flow:
     command:
       - run
       - --server.http.listen-addr=0.0.0.0:12345
@@ -11,7 +11,7 @@ services:
     ports:
       - 12345:12345
     volumes:
-      - ./agent.river:/etc/agent/config.river:ro
+      - ./agent-flow.river:/etc/agent/config.river:ro
       - /run/docker.sock:/run/docker.sock:ro
 
   grafana:

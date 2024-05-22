@@ -1,1 +1,1 @@
-# grafana-mimir-playground
+# grafana_mimir-playground_agent-flow
